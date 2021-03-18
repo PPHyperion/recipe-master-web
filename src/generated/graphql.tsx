@@ -28,7 +28,7 @@ export type QueryIngredientArgs = {
 
 export type Ingredient = {
   __typename?: 'Ingredient';
-  ingredientId: Scalars['Int'];
+  id: Scalars['Int'];
   ingredientName: Scalars['String'];
   tsCreated: Scalars['String'];
   tsLastChange: Scalars['String'];
@@ -36,7 +36,7 @@ export type Ingredient = {
 
 export type User = {
   __typename?: 'User';
-  userId: Scalars['Int'];
+  id: Scalars['Int'];
   username: Scalars['String'];
   tsCreated: Scalars['String'];
   tsLastChange: Scalars['String'];
@@ -49,6 +49,7 @@ export type Mutation = {
   deleteIngredient: Scalars['Boolean'];
   register: UserResponse;
   login: UserResponse;
+  logout: Scalars['Boolean'];
 };
 
 
@@ -96,7 +97,7 @@ export type UsernamePasswordInput = {
 
 export type RegularUserFragment = (
   { __typename?: 'User' }
-  & Pick<User, 'userId' | 'username'>
+  & Pick<User, 'id' | 'username'>
 );
 
 export type LoginMutationVariables = Exact<{
@@ -116,6 +117,14 @@ export type LoginMutation = (
       & RegularUserFragment
     )> }
   ) }
+);
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'logout'>
 );
 
 export type RegisterMutationVariables = Exact<{
@@ -151,7 +160,7 @@ export type MeQuery = (
 
 export const RegularUserFragmentDoc = gql`
     fragment RegularUser on User {
-  userId
+  id
   username
 }
     `;
@@ -171,6 +180,15 @@ export const LoginDocument = gql`
 
 export function useLoginMutation() {
   return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
+};
+export const LogoutDocument = gql`
+    mutation Logout {
+  logout
+}
+    `;
+
+export function useLogoutMutation() {
+  return Urql.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument);
 };
 export const RegisterDocument = gql`
     mutation Register($username: String!, $password: String!) {
